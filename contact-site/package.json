@@ -1,0 +1,11 @@
+{
+  "name": "contact-site-example",
+  "version": "1.0.0",
+  "description": "Static contact page example with a tiny Node server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "MIT"
+}
