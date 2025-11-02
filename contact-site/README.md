@@ -1,6 +1,6 @@
 # Contact Page Example
 
-This is a small example contact page inspired by the layout on https://www.thesciencetutor.co.uk/contact. It's a static HTML/CSS/JS front-end plus a very small, zero-dependency Node server for local testing.
+This is a small example contact page for tutors. It's a static HTML/CSS/JS front-end plus a very small, zero-dependency Node server for local testing.
 
 Files:
 - `index.html` — the contact page
