@@ -58,6 +58,43 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Handle CSV data endpoint
+  if (req.url === '/api/results' && req.method === 'GET') {
+    try {
+      const csvPath = path.join(__dirname, 'Assets', 'GCSE RESULTS 2019-2024.csv');
+      const csvData = fs.readFileSync(csvPath, 'utf8');
+      const lines = csvData.split('\n').filter(line => line.trim());
+      const results = {};
+      let currentYear = null;
+
+      for (const line of lines) {
+        if (line.includes('GCSE RESULTS') || line.includes('GCSE ')) {
+          const yearMatch = line.match(/(\d{4})/);
+          if (yearMatch) {
+            currentYear = yearMatch[1];
+            results[currentYear] = [];
+          }
+        } else if (currentYear && line.includes(',')) {
+          const parts = line.split(',').map(cell => cell.trim().replace(/"/g, ''));
+          if (parts.length >= 4) {
+            const [name, chem, bio, phys] = parts;
+            if (name && name !== 'NAME' && name !== '' && !name.includes('CHEMISTRY') && !name.includes('BIOLOGY') && !name.includes('PHYSICS')) {
+              results[currentYear].push({ name, chemistry: chem, biology: bio, physics: phys });
+            }
+          }
+        }
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(results));
+    } catch (err) {
+      console.error('Error reading CSV:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to load results' }));
+    }
+    return;
+  }
+
   // Handle static files
   let filePath = path.join(PUBLIC_DIR,
     req.url === '/' ? 'contact.html' : req.url.replace(/^\//, ''));
