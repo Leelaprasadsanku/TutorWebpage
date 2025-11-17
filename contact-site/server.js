@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const PUBLIC_DIR = __dirname;
+const PUBLIC_DIR = path.join(__dirname, '..');
 
 // Simple file sender with explicit error handling
 function sendFile(res, filePath, contentType) {
@@ -28,7 +28,7 @@ module.exports = (req, res) => {
       try {
         const data = JSON.parse(body);
         fs.appendFileSync(
-          path.join(__dirname, 'submissions.log'),
+          path.join(PUBLIC_DIR, 'submissions.log'),
           JSON.stringify({ date: new Date(), ...data }) + '\n'
         );
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -44,7 +44,7 @@ module.exports = (req, res) => {
   // Handle CSV data endpoint
   if (req.url === '/api/results' && req.method === 'GET') {
     try {
-      const csvPath = path.join(__dirname, 'Assets', 'GCSE RESULTS 2019-2024.csv');
+      const csvPath = path.join(PUBLIC_DIR, 'Assets', 'GCSE RESULTS 2019-2024.csv');
       const csvData = fs.readFileSync(csvPath, 'utf8');
       const lines = csvData.split('\n').filter(line => line.trim());
       const results = {};
