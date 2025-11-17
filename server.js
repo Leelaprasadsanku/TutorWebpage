@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const PUBLIC_DIR = __dirname;
+const PUBLIC_DIR = path.join(__dirname, 'contact-site');
 
 // Simple file sender with explicit error handling
 function sendFile(res, filePath, contentType) {
