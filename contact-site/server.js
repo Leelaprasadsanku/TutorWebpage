@@ -1,8 +1,6 @@
-const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = __dirname;
 
 // Simple file sender with explicit error handling
@@ -19,24 +17,9 @@ function sendFile(res, filePath, contentType) {
   }
 }
 
-function getContentType(filePath){
-  const ext = path.extname(filePath).toLowerCase();
-  switch(ext){
-    case '.html': return 'text/html; charset=utf-8';
-    case '.css': return 'text/css';
-    case '.js': return 'application/javascript';
-    case '.json': return 'application/json';
-    case '.png': return 'image/png';
-    case '.jpg': case '.jpeg': return 'image/jpeg';
-    case '.svg': return 'image/svg+xml';
-    default: return 'application/octet-stream';
-  }
-}
-
-// Create the server
-const server = http.createServer((req, res) => {
+module.exports = (req, res) => {
   console.log('Request for:', req.url);
-  
+
   // Handle API endpoint
   if (req.url === '/api/contact' && req.method === 'POST') {
     let body = '';
@@ -120,10 +103,4 @@ const server = http.createServer((req, res) => {
 
   // Send the file
   sendFile(res, filePath, contentType);
-});
-
-// Start the server
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
-  console.log(`Serving files from: ${PUBLIC_DIR}`);
-});
+};
